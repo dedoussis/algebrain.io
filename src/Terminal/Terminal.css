@@ -1,0 +1,19 @@
+.printer,
+form,
+input {
+  background: #282c34;
+  background-color: #282c34 !important;
+  color: #a7a7a7e5 !important;
+  width: 100%;
+  border-width: 0;
+}
+
+.printer {
+  height: 95vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+input {
+  height: 5vh;
+}
