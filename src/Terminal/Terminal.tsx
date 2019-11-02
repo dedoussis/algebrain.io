@@ -3,19 +3,17 @@ import './Terminal.css';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Algebrain from 'algebrain';
-import Executable, { Namespace, Output } from 'algebrain/dist/types/Executable';
+import Algebrain, { Namespace, Output, Executable } from 'algebrain';
 import { Formik, Form, Field } from 'formik';
 import { Map, List } from 'immutable';
-
 
 const Arrow: React.FC = () => {
     return <span>&rarr;&nbsp;</span>;
 };
 
 enum Agent {
-    ALGEBRAIN = "🧠",
-    YOU = "👶",
+    ALGEBRAIN = '🧠',
+    YOU = '👶',
 }
 
 interface Entry {
@@ -39,7 +37,7 @@ const StdOut: React.FC<Entry> = entry => {
     );
 };
 
-const Input: React.FC<{onNewEntry: (entry: Entry) => void}> = props => {
+const Input: React.FC<{ onNewEntry: (entry: Entry) => void }> = props => {
     return (
         <Formik
             initialValues={{ input: '' }}
@@ -65,7 +63,7 @@ const Input: React.FC<{onNewEntry: (entry: Entry) => void}> = props => {
     );
 };
 
-const Printer: React.FC<{entries: List<Entry>}> = props => {
+const Printer: React.FC<{ entries: List<Entry> }> = props => {
     let bottomRef: React.RefObject<HTMLDivElement> = useRef(null);
 
     useEffect(() => {
@@ -81,33 +79,41 @@ const Printer: React.FC<{entries: List<Entry>}> = props => {
             ))}
             <div
                 ref={div => {
-                    bottomRef = {current: div}
+                    bottomRef = { current: div };
                 }}
             ></div>
         </Container>
     );
-}
+};
 
 const Terminal: React.FC = () => {
-    const [namespace, setNamespace]: [Namespace, Dispatch<any>] = useState({
-        expression: Algebrain.parse(""),
-        transformationName: "n/a",
-        transformations: Map()
+    const [namespace, setNamespace]: [
+        Namespace,
+        Dispatch<Namespace>
+    ] = useState({
+        expression: Algebrain.parse(''),
+        transformationName: 'n/a',
+        transformations: Map(),
     });
 
-    const [entries, setEntries]: [List<Entry>, Dispatch<any>] = useState(List())
+    const [entries, setEntries]: [
+        List<Entry>,
+        Dispatch<List<Entry>>
+    ] = useState(List());
 
-    const onNewEntry: (entry: Entry) => void  = (entry: Entry) => {
-        const executable: Executable = Algebrain.parse(entry.text.toString().trim());
+    const onNewEntry: (entry: Entry) => void = (entry: Entry) => {
+        const executable: Executable = Algebrain.parse(
+            entry.text.toString().trim()
+        );
         const output: Output = executable.execute(namespace);
-        setNamespace(output.namespace)
+        setNamespace(output.namespace);
         const algebrainEntry: Entry = {
             timestamp: new Date().toLocaleTimeString(),
             agent: Agent.ALGEBRAIN,
             text: output.stdOut,
-        }
+        };
         setEntries(entries.concat(List([entry, algebrainEntry])));
-    }
+    };
     return (
         <Container>
             <Row>
@@ -118,6 +124,6 @@ const Terminal: React.FC = () => {
             </Row>
         </Container>
     );
-}
+};
 
 export default Terminal;
