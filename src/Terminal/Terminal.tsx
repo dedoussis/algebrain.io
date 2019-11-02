@@ -1,40 +1,45 @@
-import React from 'react';
+import React, { useState, useEffect, useRef, Dispatch } from 'react';
 import './Terminal.css';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Algebrain from 'algebrain';
+import Executable, { Namespace, Output } from 'algebrain/dist/types/Executable';
 import { Formik, Form, Field } from 'formik';
+import { Map, List } from 'immutable';
+
 
 const Arrow: React.FC = () => {
     return <span>&rarr;&nbsp;</span>;
 };
 
+enum Agent {
+    ALGEBRAIN = "🧠",
+    YOU = "👶",
+}
+
 interface Entry {
     timestamp: string;
-    agent: string;
-    message: string;
+    agent: Agent;
+    text: string;
 }
 
 const StdOut: React.FC<Entry> = entry => {
-    const { timestamp, agent, message } = entry;
+    const { timestamp, agent, text } = entry;
     return (
         <Row>
             <Col>
                 <Arrow />
                 <span className="timestamp">[{timestamp}]</span>&nbsp;
                 <span className="agent">{agent}</span>&nbsp;&nbsp;
-                <span>{message}</span>
+                <span>{text}</span>
                 <br />
             </Col>
         </Row>
     );
 };
 
-interface Props {
-    onNewEntry: (entry: Entry) => void;
-}
-
-const Input: React.FC<Props> = props => {
+const Input: React.FC<{onNewEntry: (entry: Entry) => void}> = props => {
     return (
         <Formik
             initialValues={{ input: '' }}
@@ -42,9 +47,9 @@ const Input: React.FC<Props> = props => {
                 setFieldValue('input', '');
                 setTimeout(() => {
                     props.onNewEntry({
-                        timestamp: new Date().toLocaleString(),
-                        agent: 'You',
-                        message: values.input,
+                        timestamp: new Date().toLocaleTimeString(),
+                        agent: Agent.YOU,
+                        text: values.input,
                     });
                     setSubmitting(false);
                 }, 50);
@@ -60,61 +65,59 @@ const Input: React.FC<Props> = props => {
     );
 };
 
-interface Entries {
-    entries: Entry[];
-}
+const Printer: React.FC<{entries: List<Entry>}> = props => {
+    let bottomRef: React.RefObject<HTMLDivElement> = useRef(null);
 
-class Printer extends React.Component<Entries, {}> {
-    bottomRef: React.RefObject<HTMLDivElement> = React.createRef();
-
-    scrollToBottom() {
-        if (this.bottomRef.current instanceof HTMLDivElement) {
-            this.bottomRef.current.scrollIntoView();
+    useEffect(() => {
+        if (bottomRef.current instanceof HTMLDivElement) {
+            bottomRef.current.scrollIntoView();
         }
-    }
+    });
 
-    componentDidUpdate() {
-        this.scrollToBottom();
-    }
-
-    render() {
-        const { entries } = this.props;
-        return (
-            <Container className="printer">
-                {entries.map(entry => (
-                    <StdOut {...entry} />
-                ))}
-                <div
-                    ref={div => {
-                        this.bottomRef = { current: div };
-                    }}
-                ></div>
-            </Container>
-        );
-    }
+    return (
+        <Container className="printer">
+            {props.entries.map(entry => (
+                <StdOut {...entry} />
+            ))}
+            <div
+                ref={div => {
+                    bottomRef = {current: div}
+                }}
+            ></div>
+        </Container>
+    );
 }
 
-export default class Terminal extends React.Component<{}, Entries> {
-    state: Entries = {
-        entries: [],
-    };
+const Terminal: React.FC = () => {
+    const [namespace, setNamespace]: [Namespace, Dispatch<any>] = useState({
+        expression: Algebrain.parse(""),
+        transformationName: "n/a",
+        transformations: Map()
+    });
 
-    onNewEntry(entry: Entry): void {
-        this.setState(previousState => ({
-            entries: [...previousState.entries, entry],
-        }));
-    }
+    const [entries, setEntries]: [List<Entry>, Dispatch<any>] = useState(List())
 
-    render() {
-        return (
-            <Container>
-                <Row>
-                    <Printer entries={this.state.entries} />
-                </Row>
-                <Row>
-                    <Input onNewEntry={this.onNewEntry.bind(this)} />
-                </Row>
-            </Container>
-        );
+    const onNewEntry: (entry: Entry) => void  = (entry: Entry) => {
+        const executable: Executable = Algebrain.parse(entry.text.toString().trim());
+        const output: Output = executable.execute(namespace);
+        setNamespace(output.namespace)
+        const algebrainEntry: Entry = {
+            timestamp: new Date().toLocaleTimeString(),
+            agent: Agent.ALGEBRAIN,
+            text: output.stdOut,
+        }
+        setEntries(entries.concat(List([entry, algebrainEntry])));
     }
+    return (
+        <Container>
+            <Row>
+                <Printer entries={entries} />
+            </Row>
+            <Row>
+                <Input onNewEntry={onNewEntry} />
+            </Row>
+        </Container>
+    );
 }
+
+export default Terminal;
