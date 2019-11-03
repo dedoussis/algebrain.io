@@ -1,8 +1,6 @@
 language: node_js
 node_js:
-- '10'
-- '11'
-- '8'
+  - '11'
 notifications:
   email: false
 cache:
@@ -10,9 +8,8 @@ cache:
   - "~/.npm"
   - node_modules
 before_deploy:
-- npm run test:prod
-script:
-- npm run build
+  - npm run test
+  - npm run build
 deploy:
   provider: s3
   access_key_id:
