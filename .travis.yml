@@ -14,6 +14,7 @@ before_deploy:
 deploy:
   provider: script
   script: bash scripts/deploy.sh build algebrain.io
+  skip_cleanup: true
   on:
     branch: master
 env:
