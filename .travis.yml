@@ -10,7 +10,7 @@ cache:
 before_deploy:
 - npm run test
 - npm run build
-- pip install awscli
+- pip3 install --user awscli
 deploy:
   provider: script
   script: bash scripts/deploy.sh build algebrain.io
