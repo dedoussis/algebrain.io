@@ -69,15 +69,18 @@ const Printer: React.FC<{ entries: List<Entry> }> = props => {
     let bottomRef: React.RefObject<HTMLDivElement> = useRef(null);
 
     useEffect(() => {
-        if (bottomRef.current instanceof HTMLDivElement) {
+        if (
+            bottomRef.current instanceof HTMLDivElement &&
+            bottomRef.current.hasOwnProperty('scrollIntoView')
+        ) {
             bottomRef.current.scrollIntoView();
         }
     });
 
     return (
         <Container>
-            {props.entries.map(entry => (
-                <Row>
+            {props.entries.map((entry, index) => (
+                <Row key={`entry-${index}`}>
                     <EntryOutput {...entry} />
                 </Row>
             ))}
