@@ -2,18 +2,15 @@ import React, { useState, useEffect, useRef, Dispatch } from 'react';
 import './Terminal.css';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import InputGroup from 'react-bootstrap/InputGroup';
+import FormControl from 'react-bootstrap/FormControl';
 import Algebrain, { Namespace, Output, Executable } from 'algebrain';
 import { Formik, Form, Field } from 'formik';
 import { Map, List } from 'immutable';
 
-const Arrow: React.FC = () => {
-    return <span>&rarr;&nbsp;</span>;
-};
-
 enum Agent {
     ALGEBRAIN = '🧠',
-    YOU = '👶',
+    ME = '🙂',
 }
 
 interface Entry {
@@ -22,18 +19,14 @@ interface Entry {
     text: string;
 }
 
-const StdOut: React.FC<Entry> = entry => {
+const EntryOutput: React.FC<Entry> = entry => {
     const { timestamp, agent, text } = entry;
     return (
-        <Row>
-            <Col>
-                <Arrow />
-                <span className="timestamp">[{timestamp}]</span>&nbsp;
-                <span className="agent">{agent}</span>&nbsp;&nbsp;
-                <span>{text}</span>
-                <br />
-            </Col>
-        </Row>
+        <div title={timestamp}>
+            <span className="agent">{agent}</span>&nbsp;&nbsp;
+            <span>{text}</span>
+            <br />
+        </div>
     );
 };
 
@@ -46,7 +39,7 @@ const Input: React.FC<{ onNewEntry: (entry: Entry) => void }> = props => {
                 setTimeout(() => {
                     props.onNewEntry({
                         timestamp: new Date().toLocaleTimeString(),
-                        agent: Agent.YOU,
+                        agent: Agent.ME,
                         text: values.input,
                     });
                     setSubmitting(false);
@@ -55,7 +48,16 @@ const Input: React.FC<{ onNewEntry: (entry: Entry) => void }> = props => {
             render={_ => {
                 return (
                     <Form>
-                        <Field name="input" autoComplete="off" />
+                        <InputGroup>
+                            <InputGroup.Prepend>
+                                <InputGroup.Text>>></InputGroup.Text>
+                            </InputGroup.Prepend>
+                            <FormControl
+                                as={Field}
+                                name="input"
+                                autoComplete="off"
+                            />
+                        </InputGroup>
                     </Form>
                 );
             }}
@@ -73,9 +75,11 @@ const Printer: React.FC<{ entries: List<Entry> }> = props => {
     });
 
     return (
-        <Container className="printer">
+        <Container>
             {props.entries.map(entry => (
-                <StdOut {...entry} />
+                <Row>
+                    <EntryOutput {...entry} />
+                </Row>
             ))}
             <div
                 ref={div => {
@@ -86,7 +90,15 @@ const Printer: React.FC<{ entries: List<Entry> }> = props => {
     );
 };
 
-const Terminal: React.FC = () => {
+function generateAlgebrainEntry(text: string): Entry {
+    return {
+        timestamp: new Date().toLocaleTimeString(),
+        agent: Agent.ALGEBRAIN,
+        text: text,
+    };
+}
+
+const Terminal: React.FC<React.HTMLAttributes<HTMLDivElement>> = () => {
     const [namespace, setNamespace]: [
         Namespace,
         Dispatch<Namespace>
@@ -99,7 +111,14 @@ const Terminal: React.FC = () => {
     const [entries, setEntries]: [
         List<Entry>,
         Dispatch<List<Entry>>
-    ] = useState(List());
+    ] = useState(
+        List([
+            generateAlgebrainEntry('Welcome to Algebrain!'),
+            generateAlgebrainEntry(
+                'Use the help command for usage instructions'
+            ),
+        ])
+    );
 
     const onNewEntry: (entry: Entry) => void = (entry: Entry) => {
         const executable: Executable = Algebrain.parse(
@@ -107,22 +126,19 @@ const Terminal: React.FC = () => {
         );
         const output: Output = executable.execute(namespace);
         setNamespace(output.namespace);
-        const algebrainEntry: Entry = {
-            timestamp: new Date().toLocaleTimeString(),
-            agent: Agent.ALGEBRAIN,
-            text: output.stdOut,
-        };
-        setEntries(entries.concat(List([entry, algebrainEntry])));
+        setEntries(
+            entries.concat(List([entry, generateAlgebrainEntry(output.stdOut)]))
+        );
     };
     return (
-        <Container>
-            <Row>
+        <div className="terminal">
+            <div className="terminal-output">
                 <Printer entries={entries} />
-            </Row>
-            <Row>
+            </div>
+            <div className="terminal-input">
                 <Input onNewEntry={onNewEntry} />
-            </Row>
-        </Container>
+            </div>
+        </div>
     );
 };
 

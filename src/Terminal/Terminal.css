@@ -1,19 +1,47 @@
-.printer,
+.terminal,
+.terminal-output,
+.terminal-input,
 form,
-input {
-  background: #282c34;
-  background-color: #282c34 !important;
-  color: #a7a7a7e5 !important;
-  width: 100%;
-  border-width: 0;
+input,
+.form-control,
+.input-group,
+.input-group-text {
+  background-color: inherit !important;
+  color: inherit !important;
+  border-color: inherit;
 }
 
-.printer {
-  height: 95vh;
+.terminal {
+  position: fixed;
+  top: 1.1%;
+  bottom: 1.1%;
+  left: 1.1%;
+  right: 1.1%;
+}
+
+.terminal-input {
+  height: 40px;
+}
+
+.terminal-output {
   overflow-y: scroll;
-  overflow-x: hidden;
+  height: calc(100% - 40px);
+  padding-bottom: 1%;
 }
 
-input {
-  height: 5vh;
+.terminal-output .container {
+  min-width: 100%;
+}
+
+.agent {
+  font-size: 22px;
+  vertical-align: middle;
+}
+
+.form-control {
+  border-left-width: 0px;
+}
+
+.input-group-text {
+  border-right-width: 0px;
 }
