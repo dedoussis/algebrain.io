@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-  - '11'
+- '11'
 notifications:
   email: false
 cache:
@@ -8,17 +8,16 @@ cache:
   - "~/.npm"
   - node_modules
 before_deploy:
-  - npm run test
-  - npm run build
+- npm run test
+- npm run build
+- pip install aws-cli
 deploy:
-  provider: s3
-  access_key_id:
-    secure: xB3hRFVgjr72PVmwRjisEpdIup38Nc+c0UKEtOF64vjxZ3GyPDDNyI1L2YMsnLHfmdstTQb1KTgMncX5qdkXKyKcv9ny7bDOeYfiMJ/64O/MmWcI/0S2HY+i4+wOLrR1LCGEwWz8Jh82AE92sO+znmJWiO3VOK+ceEwVjKVv3MHNKWeSuFp4JKjvi1Cm2gatmaA8KoQEZ+u4myU56unIIOGhEmGLS0tjj6CCVfUU3767HlqgqvQOkMbgTZR9ze/Z7uTIwCxHpD9twy//j9uJNqhiUbLQoIZLnXVOLvmkeK1XlIjVERu2a/7jdijbVtdgsEou2OQSwisASLOUBgtvZb0IyVpPlHEZXZPkCApcJrP5ZIfYuTCmBvL0DzUFC6A1e6RllTQyq1NOuE5PBXe/zZhclERywOjooei2CGVsa9liYJ5ilLvl+ywUC6O4iwLSoHwIzhj9uZO3L4SIDR2DrvqK3SuqfnHeG/I7zy6s5YAl4e+Cuwyx3QllWXt6bm31WbZgqholYXyzwg08lYrxhOKPGgPWMJ3vAiHeP7Q/gDxVnDSttFkRhSA2gXkFTwevSdnTHVokVy8AgqbPAEhk3ZcOVmX4DFK28r8TVz65bKWwQEzZUK5dm+76RPopT3lT5cqUfMeuq6+cfCMlDzOyUSbKrHJ7oZZo/6tzz2Dc5ys=
-  secret_access_key:
-    secure: no117ZCvCNDOgYY/xdU5Gr6Nu4o6LaeFEImeIlcTxyaTTJko/L/VEziqfAkURL+gRUvCvYnILOtBww/gJ+uRuUtNDoQWi6m8qHcTdteI5d9Qij/DwTz9ryuEEOBi6CaA3fLRB62pmRoqpCEKFY6ibDaP0PYN/JGvnEOXrF2XDg0rhi5+jPYNulDR2w8tHtrc7V/k8fSC5xjo46ZwShNJ4x2355IZtzx4VABP/oFJnclw3/FgH5eomKYQioqFckibJoadAalJLUM1sG3iZd1SitKLDUygGcFRax2FaQba/CsBEqL89e7VZ9yMrMlLlZqLScqeryMJupw6REeAb4GhbBah23HUqxq2/Jhuq/tyBpqAgM84d9Sw9QEG6x7l2ljsd8PIuFcHmgdekhB0gReRuS4DhnM0URsJkJC76gA9Doo11Ol08DP7Zkq195zCkL7uB9AQTVILNGd7G8lixdakKWQvgh0Hvlsk15u8Os03y2n3lR1vscoqnNslhoaV9RMMEcO6PibQYPxdxAcMTsdG/FxMPtOWwQpmhUWsPM9u9kCZHVSo+RIsJVPjP8uNRdSgs/jl1b7S8I5+80WUXL5P1BkdrpvugUeeEs7FEp9/plhtdNO1dfqPmD+INoGwh/zWb0Bk5jM37VMjWp3TIudrLM6eYTE1gcvoxvsfdYvG24Q=
-  bucket: algebrain.io
-  region: eu-west-1
-  local_dir: build
-  skip_cleanup: true
+  provider: script
+  script: bash scripts/deploy.sh build algebrain.io
   on:
     branch: master
+env:
+  global:
+  - secure: U16KsSlz9yUWenLFWqTPt7DQgzwwgkGUQEH0qFnRCZaCU1v9CGVBTIhu9CEQln6ZFcYgM/w5JDzugdu1BgbHUoY/mPgyxJE2sjPlTXP5xfFaMFTelGF5RguMnus/A+wzm0Aq44CKV/ZbWDe5M1YMeb7yFTOdTemOKQWZj6yInO1ZkgbawVXSJxPipPdWA7d5mSojybg5B0IrHKQurlT21FiznX2ORKSJPJdYaAqZPt62I5gms4DbBOzPgKFYnAUETUeyT4X8kG/crfJ3QPADiAqmi0yvwn7kiyO56lfl76qGguabFTLWaLgUXOuqWnr9hD0siC1/7IMvr0mRdbPwbVDzrOt9tl387QWIIaBrTk3EH1Yh9rZn+Xudw+PPxvajcZZZJ1TS2GRE0ATkZxch6Ykd+sIpM9/K8qdCKieTsf5gussrMK5uLY2PputYMr/480fZhLGwxxRCzWfqkQkDvhHjomDqhTBwCheQdSnZNCaIWZQeqVTvmy84MmFmle/ijKmTycr6zG7HjvumVABNs+qSUVfvbYO1yB23TkqmTuW5EfH4Ez4icLGooNnzRaU4ECU5l8V8RAirjVLQ2ncn7Eg1DYRWwotDWJ4PdlcxIkRbVZe0+0h9boaECisN492n6pjOebfX8y6MllSPaD2KE46tg3E5+Zk5hmTEVk0+T7E=
+  - secure: UiSYjfUDF+NUDL9NHQZNKcCaZbRxSh4w+ahn+K1ZStU3uWKs9rfYwmM4/Cc6hV/AIFS0RCVsoLHYlwljUkDl/Ots8lZuAsQRqcFleM7nqTgUDkmHdlogj2HAiKzK2421OsX+dIC7JPdAaEqXfRcrPnwAL+Nhuz2KZ7P3lw/n0YoeWX3LVqjyu3yrnhTWTsswFqJLT6mceZ4fcZjLneMdv660you7J8FacUBsYkOwbYk+Qr6rxcY1G1/YiDzf5i0Cc4uH/FUfT7j9OYvly9mjY1qfzosAmW6uTads3Fp/IceewVwlxcWA2votK3LrLuLrkwnOYP69Whwr4mO6ametS+UxaU2h8Jg4afJLTDXwVEtsuPTqx2AiWxcpWKivhOj8+vYPvzUD649ZaMLISMV3OG+KsyTjSs5UuzGngzPuIUQLimuTjZCTKfzzQ9ZEoUrcQOZzHxqPiqHR3Kr/RHcMLf/l/rUxbZTQAnvRCTwuCrbEFFP6Qre4LWi5CxfCDR2948a40esKJVP8f6T9M5kC0K3JQGKpB/CJ+dsym/BUILsDK8HB3n1mMiRBZf+nC+A+xg/7wqtAucx4Ewg0d/ONs/JazRfNwjfh1hoF1sj4t485rDr3lvfQ2I//gacqkHUAPPDyQ0IJUx8iwU//Ev+W0S97l+PrS/MeEVN2SO1apDc=
+  - AWS_DEFAULT_REGION: eu-west-1
