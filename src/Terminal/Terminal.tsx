@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, Dispatch } from 'react';
 import './Terminal.css';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import Algebrain, { Namespace, Output, Executable } from 'algebrain';
@@ -18,17 +19,6 @@ interface Entry {
     agent: Agent;
     text: string;
 }
-
-const EntryOutput: React.FC<Entry> = entry => {
-    const { timestamp, agent, text } = entry;
-    return (
-        <div title={timestamp}>
-            <span className="agent">{agent}</span>&nbsp;&nbsp;
-            <span>{text}</span>
-            <br />
-        </div>
-    );
-};
 
 const Input: React.FC<{ onNewEntry: (entry: Entry) => void }> = props => {
     return (
@@ -71,7 +61,7 @@ const Printer: React.FC<{ entries: List<Entry> }> = props => {
     useEffect(() => {
         if (
             bottomRef.current instanceof HTMLDivElement &&
-            bottomRef.current.hasOwnProperty('scrollIntoView')
+            typeof bottomRef.current.scrollIntoView === 'function'
         ) {
             bottomRef.current.scrollIntoView();
         }
@@ -80,8 +70,9 @@ const Printer: React.FC<{ entries: List<Entry> }> = props => {
     return (
         <Container>
             {props.entries.map((entry, index) => (
-                <Row key={`entry-${index}`}>
-                    <EntryOutput {...entry} />
+                <Row title={entry.timestamp} key={`entry-${index}`}>
+                    <Col className="agent pl-0">{entry.agent}</Col>
+                    <Col className="pr-0">{entry.text}</Col>
                 </Row>
             ))}
             <div
@@ -139,7 +130,7 @@ const Terminal: React.FC<React.HTMLAttributes<HTMLDivElement>> = () => {
                 <Printer entries={entries} />
             </div>
             <div className="terminal-input">
-                <Input onNewEntry={onNewEntry} />
+                <Input aria-label="command line" onNewEntry={onNewEntry} />
             </div>
         </div>
     );

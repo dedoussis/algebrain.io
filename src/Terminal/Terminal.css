@@ -34,8 +34,8 @@ input,
 }
 
 .agent {
-  font-size: 22px;
-  vertical-align: middle;
+  font-size: 20px;
+  max-width: 2%;
 }
 
 .form-control {
