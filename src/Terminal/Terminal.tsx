@@ -5,7 +5,12 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
-import Algebrain, { Namespace, Output, Executable } from 'algebrain';
+import Algebrain, {
+    Namespace,
+    Output,
+    Executable,
+    ExecuteError,
+} from 'algebrain';
 import { Formik, Form, Field } from 'formik';
 import { Map, List } from 'immutable';
 
@@ -72,7 +77,17 @@ const Printer: React.FC<{ entries: List<Entry> }> = props => {
             {props.entries.map((entry, index) => (
                 <Row title={entry.timestamp} key={`entry-${index}`}>
                     <Col className="agent pl-0">{entry.agent}</Col>
-                    <Col className="pr-0">{entry.text}</Col>
+                    <Col
+                        className={`pr-0 ${
+                            Object.values(ExecuteError).includes(
+                                entry.text as ExecuteError
+                            )
+                                ? 'error-text'
+                                : 'text'
+                        }`}
+                    >
+                        {entry.text}
+                    </Col>
                 </Row>
             ))}
             <div
@@ -97,8 +112,6 @@ const Terminal: React.FC<React.HTMLAttributes<HTMLDivElement>> = () => {
         Namespace,
         Dispatch<Namespace>
     ] = useState({
-        expression: Algebrain.parse(''),
-        transformationName: 'n/a',
         transformations: Map(),
     });
 

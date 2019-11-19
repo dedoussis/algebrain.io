@@ -14,7 +14,7 @@
     "@types/node": "12.7.2",
     "@types/react": "16.9.2",
     "@types/react-dom": "16.8.5",
-    "algebrain": "^0.0.3-b",
+    "algebrain": "0.0.3-e",
     "antlr4ts": "^0.5.0-alpha.3",
     "bootstrap": "^4.3.1",
     "formik": "^1.5.8",
@@ -23,7 +23,7 @@
     "react-app-polyfill": "^1.0.2",
     "react-bootstrap": "^1.0.0-beta.11",
     "react-dom": "^16.9.0",
-    "react-scripts": "3.1.1",
+    "react-scripts": "3.1.2",
     "typescript": "3.5.3"
   },
   "lint-staged": {

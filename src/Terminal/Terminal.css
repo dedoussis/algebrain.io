@@ -38,6 +38,14 @@ input,
   max-width: 2%;
 }
 
+.text, .error-text {
+  white-space: pre-line;
+}
+
+.error-text {
+  color: rgb(245, 121, 121);
+}
+
 .form-control {
   border-left-width: 0px;
 }
