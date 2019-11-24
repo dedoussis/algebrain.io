@@ -122,7 +122,7 @@ const Terminal: React.FC<React.HTMLAttributes<HTMLDivElement>> = () => {
         List([
             generateAlgebrainEntry('Welcome to Algebrain!'),
             generateAlgebrainEntry(
-                'Use the help command for usage instructions'
+                'Try the help command for usage instructions'
             ),
         ])
     );
