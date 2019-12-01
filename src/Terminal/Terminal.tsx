@@ -7,9 +7,13 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import Algebrain, {
     Namespace,
+    Transformation,
     Output,
     Executable,
     ExecuteError,
+    differentiation,
+    simplification,
+    fibonacci,
 } from 'algebrain';
 import { Formik, Form, Field } from 'formik';
 import { Map, List } from 'immutable';
@@ -108,11 +112,17 @@ function generateAlgebrainEntry(text: string): Entry {
 }
 
 const Terminal: React.FC<React.HTMLAttributes<HTMLDivElement>> = () => {
-    const [namespace, setNamespace]: [
-        Namespace,
-        Dispatch<Namespace>
-    ] = useState({
-        transformations: Map(),
+    const presetTransformations: Map<string, Executable> = Map<
+        string,
+        Transformation
+    >()
+        .set(differentiation.name, differentiation)
+        .set(simplification.name, simplification)
+        .set(fibonacci.name, fibonacci);
+
+    const [namespace, setNamespace]: [Namespace, Dispatch<any>] = useState({
+        transformations: presetTransformations,
+        transformationName: simplification.name,
     });
 
     const [entries, setEntries]: [
