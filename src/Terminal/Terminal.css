@@ -13,9 +13,7 @@ input,
 .terminal {
   padding: 1.1%;
 }
-.terminal-input {
-  margin-top: 0.8%;
-}
+
 .terminal-output {
   overflow-y: scroll;
 }

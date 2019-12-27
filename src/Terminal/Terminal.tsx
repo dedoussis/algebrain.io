@@ -76,7 +76,9 @@ const Input: React.FC<{
                                         current: ref as HTMLTextAreaElement,
                                     };
                                 }}
-                                style={{ height: `${props.textAreaSize}vh` }}
+                                style={{
+                                    height: `${0.93 * props.textAreaSize}vh`,
+                                }}
                                 component="textarea"
                                 name="input"
                                 autoComplete="off"
