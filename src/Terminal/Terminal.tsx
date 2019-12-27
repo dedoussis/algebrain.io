@@ -17,6 +17,8 @@ import Algebrain, {
 } from 'algebrain';
 import { Formik, Form, Field } from 'formik';
 import { Map, List } from 'immutable';
+import SplitterLayout from 'react-splitter-layout';
+import 'react-splitter-layout/lib/index.css';
 
 enum Agent {
     ALGEBRAIN = '🧠',
@@ -29,30 +31,53 @@ interface Entry {
     text: string;
 }
 
-const Input: React.FC<{ onNewEntry: (entry: Entry) => void }> = props => {
+const Input: React.FC<{
+    onNewEntry: (entry: Entry) => void;
+    textAreaSize: number;
+}> = props => {
+    let inputRef: React.RefObject<HTMLTextAreaElement> = useRef(null);
+    useEffect(() => {
+        if (inputRef.current instanceof HTMLTextAreaElement) {
+            inputRef.current.focus();
+        }
+    });
     return (
         <Formik
             initialValues={{ input: '' }}
-            onSubmit={(values, { setSubmitting, setFieldValue }) => {
-                setFieldValue('input', '');
+            onSubmit={(values, { setSubmitting, resetForm }) => {
+                resetForm();
                 setTimeout(() => {
                     props.onNewEntry({
                         timestamp: new Date().toLocaleTimeString(),
                         agent: Agent.ME,
-                        text: values.input,
+                        text: values.input.trim(),
                     });
                     setSubmitting(false);
                 }, 50);
             }}
-            render={_ => {
+            render={formikProps => {
                 return (
-                    <Form>
+                    <Form
+                        onKeyDown={e => {
+                            if (e.keyCode === 13 && !e.shiftKey) {
+                                e.preventDefault();
+                                formikProps.submitForm();
+                            }
+                        }}
+                    >
                         <InputGroup>
                             <InputGroup.Prepend>
                                 <InputGroup.Text>>></InputGroup.Text>
                             </InputGroup.Prepend>
                             <FormControl
                                 as={Field}
+                                innerRef={ref => {
+                                    inputRef = {
+                                        current: ref as HTMLTextAreaElement,
+                                    };
+                                }}
+                                style={{ height: `${props.textAreaSize}vh` }}
+                                component="textarea"
                                 name="input"
                                 autoComplete="off"
                             />
@@ -137,6 +162,10 @@ const Terminal: React.FC<React.HTMLAttributes<HTMLDivElement>> = () => {
         ])
     );
 
+    const [inputPaneSize, setInputPaneSize]: [number, Dispatch<any>] = useState(
+        0
+    );
+
     const onNewEntry: (entry: Entry) => void = (entry: Entry) => {
         const executable: Executable = Algebrain.parse(
             entry.text.toString().trim()
@@ -147,15 +176,30 @@ const Terminal: React.FC<React.HTMLAttributes<HTMLDivElement>> = () => {
             entries.concat(List([entry, generateAlgebrainEntry(output.stdOut)]))
         );
     };
+
     return (
-        <div className="terminal">
+        <SplitterLayout
+            customClassName="terminal"
+            vertical={true}
+            percentage={true}
+            primaryMinSize={15}
+            secondaryMinSize={15}
+            secondaryInitialSize={15}
+            onSecondaryPaneSizeChange={(newSize: number) =>
+                setInputPaneSize(newSize)
+            }
+        >
             <div className="terminal-output">
                 <Printer entries={entries} />
             </div>
             <div className="terminal-input">
-                <Input aria-label="command line" onNewEntry={onNewEntry} />
+                <Input
+                    aria-label="command line"
+                    onNewEntry={onNewEntry}
+                    textAreaSize={inputPaneSize}
+                />
             </div>
-        </div>
+        </SplitterLayout>
     );
 };
 

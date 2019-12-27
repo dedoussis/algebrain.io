@@ -8,29 +8,21 @@ input,
 .input-group-text {
   background-color: inherit !important;
   color: inherit !important;
-  border-color: inherit;
 }
 
 .terminal {
-  position: fixed;
-  top: 1.1%;
-  bottom: 1.1%;
-  left: 1.1%;
-  right: 1.1%;
+  padding: 1.1%;
 }
-
 .terminal-input {
-  height: 40px;
+  margin-top: 0.8%;
 }
-
 .terminal-output {
   overflow-y: scroll;
-  height: calc(100% - 40px);
-  padding-bottom: 1%;
 }
 
 .terminal-output .container {
   min-width: 100%;
+  padding-bottom: 1.1%;
 }
 
 .agent {
@@ -46,10 +38,16 @@ input,
   color: rgb(245, 121, 121);
 }
 
-.form-control {
-  border-left-width: 0px;
+.form-control,
+.input-group-text {
+  border: none;
 }
 
 .input-group-text {
-  border-right-width: 0px;
+  align-items: unset;
+}
+
+.layout-splitter {
+  background-color: white !important;
+  border-radius: 5rem;
 }
