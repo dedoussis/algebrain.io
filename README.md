@@ -1,7 +1,7 @@
 # algebrain.io
 [![Build Status](https://travis-ci.com/dedoussis/algebrain.io.svg?token=Sgwg8sRpH88p8zZAzn72&branch=master)](https://travis-ci.com/dedoussis/algebrain.io)
 
-Web-App client for [algebrain](https://github.com/dedoussis/algebrain), your browser's favoutite Computer Algebra System.
+Web-App client for [algebrain](https://github.com/dedoussis/algebrain), your browser's favourite Computer Algebra System.
 
 ## Available Scripts
 
