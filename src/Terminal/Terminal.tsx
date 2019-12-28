@@ -3,6 +3,7 @@ import './Terminal.css';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button';
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import Algebrain, {
@@ -19,6 +20,9 @@ import { Formik, Form, Field } from 'formik';
 import { Map, List } from 'immutable';
 import SplitterLayout from 'react-splitter-layout';
 import 'react-splitter-layout/lib/index.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faColumns } from '@fortawesome/free-solid-svg-icons';
+import { faGithub } from '@fortawesome/free-brands-svg-icons';
 
 enum Agent {
     ALGEBRAIN = '🧠',
@@ -77,7 +81,7 @@ const Input: React.FC<{
                                     };
                                 }}
                                 style={{
-                                    height: `${0.93 * props.textAreaSize}vh`,
+                                    height: `${0.8 * props.textAreaSize}vh`,
                                 }}
                                 component="textarea"
                                 name="input"
@@ -138,6 +142,26 @@ function generateAlgebrainEntry(text: string): Entry {
     };
 }
 
+const SettingsPanel: React.FC<{
+    vertical: boolean;
+    verticalSetter: (vertical: boolean) => void;
+}> = props => {
+    const onColumnsClick: (e: React.MouseEvent) => void = e => {
+        e.preventDefault();
+        props.verticalSetter(!props.vertical);
+    };
+    return (
+        <div className="settings-panel">
+            <Button onClick={onColumnsClick}>
+                <FontAwesomeIcon icon={faColumns} size="2x" />
+            </Button>
+            <Button href="https://github.com/dedoussis/algebrain">
+                <FontAwesomeIcon icon={faGithub} size="2x" />
+            </Button>
+        </div>
+    );
+};
+
 const Terminal: React.FC<React.HTMLAttributes<HTMLDivElement>> = () => {
     const presetTransformations: Map<string, Executable> = Map<
         string,
@@ -164,6 +188,8 @@ const Terminal: React.FC<React.HTMLAttributes<HTMLDivElement>> = () => {
         ])
     );
 
+    const [vertical, setVertical]: [boolean, Dispatch<any>] = useState(true);
+
     const [inputPaneSize, setInputPaneSize]: [number, Dispatch<any>] = useState(
         0
     );
@@ -180,28 +206,31 @@ const Terminal: React.FC<React.HTMLAttributes<HTMLDivElement>> = () => {
     };
 
     return (
-        <SplitterLayout
-            customClassName="terminal"
-            vertical={true}
-            percentage={true}
-            primaryMinSize={15}
-            secondaryMinSize={15}
-            secondaryInitialSize={15}
-            onSecondaryPaneSizeChange={(newSize: number) =>
-                setInputPaneSize(newSize)
-            }
-        >
-            <div className="terminal-output">
-                <Printer entries={entries} />
-            </div>
-            <div className="terminal-input">
-                <Input
-                    aria-label="command line"
-                    onNewEntry={onNewEntry}
-                    textAreaSize={inputPaneSize}
-                />
-            </div>
-        </SplitterLayout>
+        <div>
+            <SettingsPanel vertical={vertical} verticalSetter={setVertical} />
+            <SplitterLayout
+                customClassName="terminal"
+                vertical={vertical}
+                percentage={true}
+                primaryMinSize={15}
+                secondaryMinSize={15}
+                secondaryInitialSize={35}
+                onSecondaryPaneSizeChange={(newSize: number) =>
+                    setInputPaneSize(newSize)
+                }
+            >
+                <div className="terminal-output">
+                    <Printer entries={entries} />
+                </div>
+                <div className="terminal-input">
+                    <Input
+                        aria-label="command line"
+                        onNewEntry={onNewEntry}
+                        textAreaSize={vertical ? inputPaneSize : 100}
+                    />
+                </div>
+            </SplitterLayout>
+        </div>
     );
 };
 

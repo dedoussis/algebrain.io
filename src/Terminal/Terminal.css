@@ -10,12 +10,43 @@ input,
   color: inherit !important;
 }
 
+.settings-panel {
+  position: absolute;
+  top: 3%;
+  right: 3%;
+  width: 7%;
+  height: 10%;
+  z-index: 10;
+}
+
+.settings-panel .btn {
+  background-color: inherit;
+  opacity: 0.5;
+  border-color: transparent
+}
+
+.settings-panel .btn:hover {
+  opacity: 1;
+  transition: opacity .3s ease-out;
+  -moz-transition: opacity .3s ease-out;
+  -webkit-transition: opacity .3s ease-out;
+  -o-transition: opacity .3s ease-out;
+}
+
+.settings-panel .btn:active {
+  background-color: inherit !important;
+}
+
 .terminal {
   padding: 1.1%;
 }
 
 .terminal-output {
   overflow-y: scroll;
+}
+
+.terminal-input {
+  margin-top: 1%;
 }
 
 .terminal-output .container {
@@ -28,7 +59,8 @@ input,
   max-width: 2%;
 }
 
-.text, .error-text {
+.text, 
+.error-text {
   white-space: pre-line;
 }
 
@@ -39,6 +71,7 @@ input,
 .form-control,
 .input-group-text {
   border: none;
+  margin-right: 0.5%;
 }
 
 .input-group-text {
