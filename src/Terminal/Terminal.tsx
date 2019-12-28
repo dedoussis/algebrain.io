@@ -23,6 +23,7 @@ import 'react-splitter-layout/lib/index.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faColumns } from '@fortawesome/free-solid-svg-icons';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
+import { useMediaQuery } from 'react-responsive';
 
 enum Agent {
     ALGEBRAIN = '🧠',
@@ -194,6 +195,10 @@ const Terminal: React.FC<React.HTMLAttributes<HTMLDivElement>> = () => {
         0
     );
 
+    const isDesktopOrLaptop = useMediaQuery({
+        query: '(min-device-width: 1224px)',
+    });
+
     const onNewEntry: (entry: Entry) => void = (entry: Entry) => {
         const executable: Executable = Algebrain.parse(
             entry.text.toString().trim()
@@ -207,7 +212,12 @@ const Terminal: React.FC<React.HTMLAttributes<HTMLDivElement>> = () => {
 
     return (
         <div>
-            <SettingsPanel vertical={vertical} verticalSetter={setVertical} />
+            {isDesktopOrLaptop && (
+                <SettingsPanel
+                    vertical={vertical}
+                    verticalSetter={setVertical}
+                />
+            )}
             <SplitterLayout
                 customClassName="terminal"
                 vertical={vertical}
