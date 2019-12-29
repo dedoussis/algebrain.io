@@ -1,0 +1,13 @@
+.agent {
+    font-size: 20px;
+    max-width: 2%;
+}
+
+.text, 
+.error-text {
+  white-space: pre-line;
+}
+
+.error-text {
+    color: rgb(245, 121, 121);
+}

@@ -1,42 +1,3 @@
-.terminal,
-.terminal-output,
-.terminal-input,
-form,
-input,
-.form-control,
-.input-group,
-.input-group-text {
-  background-color: inherit !important;
-  color: inherit !important;
-}
-
-.settings-panel {
-  position: absolute;
-  top: 3%;
-  right: 3%;
-  width: 7%;
-  height: 10%;
-  z-index: 10;
-}
-
-.settings-panel .btn {
-  background-color: inherit;
-  opacity: 0.5;
-  border-color: transparent
-}
-
-.settings-panel .btn:hover {
-  opacity: 1;
-  transition: opacity .3s ease-out;
-  -moz-transition: opacity .3s ease-out;
-  -webkit-transition: opacity .3s ease-out;
-  -o-transition: opacity .3s ease-out;
-}
-
-.settings-panel .btn:active {
-  background-color: inherit !important;
-}
-
 .terminal {
   padding: 1.1%;
 }
@@ -52,30 +13,6 @@ input,
 .terminal-output .container {
   min-width: 100%;
   padding-bottom: 1.1%;
-}
-
-.agent {
-  font-size: 20px;
-  max-width: 2%;
-}
-
-.text, 
-.error-text {
-  white-space: pre-line;
-}
-
-.error-text {
-  color: rgb(245, 121, 121);
-}
-
-.form-control,
-.input-group-text {
-  border: none;
-  margin-right: 0.5%;
-}
-
-.input-group-text {
-  align-items: unset;
 }
 
 .layout-splitter {
