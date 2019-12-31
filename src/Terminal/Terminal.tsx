@@ -13,7 +13,7 @@ import { Map, List } from 'immutable';
 import SplitterLayout from 'react-splitter-layout';
 import 'react-splitter-layout/lib/index.css';
 import { useMediaQuery } from 'react-responsive';
-import { Entry, generateAlgebrainEntry } from '../utils';
+import { Entry, Agent, generateAlgebrainEntry, LinkedList } from '../utils';
 import Input from '../Input/Input';
 import Printer from '../Printer/Printer';
 import SettingsPanel from '../SettingsPanel/SettingsPanel';
@@ -92,6 +92,9 @@ const Terminal: React.FC<React.HTMLAttributes<HTMLDivElement>> = () => {
                         aria-label="command line"
                         onNewEntry={onNewEntry}
                         textAreaSize={vertical ? inputPaneSize : 100}
+                        userEntries={LinkedList.fromList(
+                            entries.filter(entry => entry.agent === Agent.Me)
+                        )}
                     />
                 </div>
             </SplitterLayout>

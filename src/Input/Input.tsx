@@ -1,29 +1,52 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState, Dispatch } from 'react';
 import './Input.css';
-
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import { Formik, Form, Field } from 'formik';
 
-import { Entry, generateUserEntry } from '../utils';
+import { Entry, generateUserEntry, LinkedList, LinkedItem } from '../utils';
 
-const Input: React.FC<{
+type InputProps = {
+    userEntries: LinkedList<Entry>;
     onNewEntry: (entry: Entry) => void;
     textAreaSize: number;
-}> = props => {
+};
+
+const Input: React.FC<InputProps> = ({
+    userEntries,
+    onNewEntry,
+    textAreaSize,
+}) => {
     let inputRef: React.RefObject<HTMLTextAreaElement> = useRef(null);
     useEffect(() => {
         if (inputRef.current instanceof HTMLTextAreaElement) {
             inputRef.current.focus();
         }
     });
+
+    const [currentEntry, setCurrentEntry]: [
+        LinkedItem<Entry>,
+        Dispatch<any>
+    ] = useState(
+        userEntries.prepend(generateUserEntry('')).head as LinkedItem<Entry>
+    );
+    useEffect(
+        () =>
+            setCurrentEntry(
+                userEntries.prepend(generateUserEntry('')).head as LinkedItem<
+                    Entry
+                >
+            ),
+        [userEntries]
+    );
+
     return (
         <Formik
-            initialValues={{ input: '' }}
+            initialValues={{ input: currentEntry.value.text }}
             onSubmit={(values, { setSubmitting, resetForm }) => {
                 resetForm();
                 setTimeout(() => {
-                    props.onNewEntry(generateUserEntry(values.input.trim()));
+                    onNewEntry(generateUserEntry(values.input.trim()));
                     setSubmitting(false);
                 }, 50);
             }}
@@ -34,6 +57,20 @@ const Input: React.FC<{
                             if (e.keyCode === 13 && !e.shiftKey) {
                                 e.preventDefault();
                                 formikProps.submitForm();
+                            }
+                            if (e.keyCode === 38 && currentEntry.next) {
+                                e.preventDefault();
+                                formikProps.setValues({
+                                    input: currentEntry.next.value.text,
+                                });
+                                setCurrentEntry(currentEntry.next);
+                            }
+                            if (e.keyCode === 40 && currentEntry.previous) {
+                                e.preventDefault();
+                                formikProps.setValues({
+                                    input: currentEntry.previous.value.text,
+                                });
+                                setCurrentEntry(currentEntry.previous);
                             }
                         }}
                     >
@@ -49,7 +86,7 @@ const Input: React.FC<{
                                     };
                                 }}
                                 style={{
-                                    height: `${0.8 * props.textAreaSize}vh`,
+                                    height: `${0.8 * textAreaSize}vh`,
                                 }}
                                 component="textarea"
                                 name="input"

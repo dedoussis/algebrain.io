@@ -23,8 +23,10 @@ const Printer: React.FC<{ entries: List<Entry> }> = props => {
     return (
         <Container>
             {props.entries.map((entry, index) => (
-                <Row title={entry.timestamp} key={`entry-${index}`}>
-                    <Col className="agent pl-0">{entry.agent}</Col>
+                <Row key={`entry-${index}`}>
+                    <Col title={entry.timestamp} className="agent pl-0">
+                        {entry.agent}
+                    </Col>
                     <Col
                         className={`pr-0 ${
                             Object.values(ExecuteError).includes(
