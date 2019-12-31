@@ -35,7 +35,7 @@ export type LinkedItem<T> = {
 export class LinkedList<T> {
     constructor(public head?: LinkedItem<T>) {}
 
-    prepend(item: T) {
+    prepend(item: T): LinkedList<T> {
         if (!this.head) {
             return new LinkedList({ value: item });
         }
