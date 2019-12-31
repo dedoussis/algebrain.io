@@ -40,7 +40,7 @@ const Input: React.FC<InputProps> = ({
                 userEntries.prepend(generateUserEntry(initialInput))
                     .head as LinkedItem<Entry>
             ),
-        [userEntries]
+        [userEntries, initialInput]
     );
 
     return (
