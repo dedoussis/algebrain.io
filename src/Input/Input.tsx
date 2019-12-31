@@ -10,12 +10,14 @@ type InputProps = {
     userEntries: LinkedList<Entry>;
     onNewEntry: (entry: Entry) => void;
     textAreaSize: number;
+    initialInput?: string;
 };
 
 const Input: React.FC<InputProps> = ({
     userEntries,
     onNewEntry,
     textAreaSize,
+    initialInput = '',
 }) => {
     let inputRef: React.RefObject<HTMLTextAreaElement> = useRef(null);
     useEffect(() => {
@@ -28,75 +30,73 @@ const Input: React.FC<InputProps> = ({
         LinkedItem<Entry>,
         Dispatch<any>
     ] = useState(
-        userEntries.prepend(generateUserEntry('')).head as LinkedItem<Entry>
+        userEntries.prepend(generateUserEntry(initialInput)).head as LinkedItem<
+            Entry
+        >
     );
     useEffect(
         () =>
             setCurrentEntry(
-                userEntries.prepend(generateUserEntry('')).head as LinkedItem<
-                    Entry
-                >
+                userEntries.prepend(generateUserEntry(initialInput))
+                    .head as LinkedItem<Entry>
             ),
         [userEntries]
     );
 
     return (
         <Formik
-            initialValues={{ input: currentEntry.value.text }}
+            initialValues={{ input: initialInput }}
             onSubmit={(values, { setSubmitting, resetForm }) => {
                 resetForm();
-                setTimeout(() => {
-                    onNewEntry(generateUserEntry(values.input.trim()));
-                    setSubmitting(false);
-                }, 50);
+                onNewEntry(generateUserEntry(values.input.trim()));
+                setSubmitting(false);
             }}
-            render={formikProps => {
-                return (
-                    <Form
-                        onKeyDown={e => {
-                            if (e.keyCode === 13 && !e.shiftKey) {
-                                e.preventDefault();
-                                formikProps.submitForm();
-                            }
-                            if (e.keyCode === 38 && currentEntry.next) {
-                                e.preventDefault();
-                                formikProps.setValues({
-                                    input: currentEntry.next.value.text,
-                                });
-                                setCurrentEntry(currentEntry.next);
-                            }
-                            if (e.keyCode === 40 && currentEntry.previous) {
-                                e.preventDefault();
-                                formikProps.setValues({
-                                    input: currentEntry.previous.value.text,
-                                });
-                                setCurrentEntry(currentEntry.previous);
-                            }
-                        }}
-                    >
-                        <InputGroup>
-                            <InputGroup.Prepend>
-                                <InputGroup.Text>>></InputGroup.Text>
-                            </InputGroup.Prepend>
-                            <FormControl
-                                as={Field}
-                                innerRef={ref => {
-                                    inputRef = {
-                                        current: ref as HTMLTextAreaElement,
-                                    };
-                                }}
-                                style={{
-                                    height: `${0.8 * textAreaSize}vh`,
-                                }}
-                                component="textarea"
-                                name="input"
-                                autoComplete="off"
-                            />
-                        </InputGroup>
-                    </Form>
-                );
-            }}
-        />
+        >
+            {({ submitForm, setValues }) => (
+                <Form
+                    onKeyDown={e => {
+                        if (e.keyCode === 13 && !e.shiftKey) {
+                            e.preventDefault();
+                            submitForm();
+                        }
+                        if (e.keyCode === 38 && currentEntry.next) {
+                            e.preventDefault();
+                            setValues({
+                                input: currentEntry.next.value.text,
+                            });
+                            setCurrentEntry(currentEntry.next);
+                        }
+                        if (e.keyCode === 40 && currentEntry.previous) {
+                            e.preventDefault();
+                            setValues({
+                                input: currentEntry.previous.value.text,
+                            });
+                            setCurrentEntry(currentEntry.previous);
+                        }
+                    }}
+                >
+                    <InputGroup>
+                        <InputGroup.Prepend>
+                            <InputGroup.Text>>></InputGroup.Text>
+                        </InputGroup.Prepend>
+                        <FormControl
+                            as={Field}
+                            innerRef={ref => {
+                                inputRef = {
+                                    current: ref as HTMLTextAreaElement,
+                                };
+                            }}
+                            style={{
+                                height: `${0.8 * textAreaSize}vh`,
+                            }}
+                            component="textarea"
+                            name="input"
+                            autoComplete="off"
+                        />
+                    </InputGroup>
+                </Form>
+            )}
+        </Formik>
     );
 };
 

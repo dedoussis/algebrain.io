@@ -3,6 +3,7 @@ import './Terminal.css';
 import Algebrain, {
     Namespace,
     Transformation,
+    Node,
     Output,
     Executable,
     differentiation,
@@ -58,10 +59,25 @@ const Terminal: React.FC<React.HTMLAttributes<HTMLDivElement>> = () => {
         const executable: Executable = Algebrain.parse(
             entry.text.toString().trim()
         );
-        const output: Output = executable.execute(namespace);
+        let output: Output = executable.execute(namespace);
+        if (
+            namespace.expression &&
+            !namespace.expression.equals(output.namespace.expression)
+        ) {
+            const simplified: Node = simplification.transform(
+                output.namespace.expression as Node
+            );
+            output = {
+                namespace: {
+                    ...output.namespace,
+                    expression: simplified,
+                },
+                stdOut: simplified.toString(),
+            };
+        }
         setNamespace(output.namespace);
         setEntries(
-            entries.concat(List([entry, generateAlgebrainEntry(output.stdOut)]))
+            entries.concat([entry, generateAlgebrainEntry(output.stdOut)])
         );
     };
 
