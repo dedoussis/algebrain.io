@@ -61,8 +61,8 @@ const Terminal: React.FC<React.HTMLAttributes<HTMLDivElement>> = () => {
         );
         let output: Output = executable.execute(namespace);
         if (
-            namespace.expression &&
-            !namespace.expression.equals(output.namespace.expression)
+            output.namespace.expression &&
+            !output.namespace.expression.equals(namespace.expression)
         ) {
             const simplified: Node = simplification.transform(
                 output.namespace.expression as Node
