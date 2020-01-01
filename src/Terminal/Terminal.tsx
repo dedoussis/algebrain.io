@@ -20,7 +20,7 @@ import Printer from '../Printer/Printer';
 import SettingsPanel from '../SettingsPanel/SettingsPanel';
 
 const Terminal: React.FC<React.HTMLAttributes<HTMLDivElement>> = () => {
-    const presetTransformations: Map<string, Executable> = Map<
+    const presetTransformations: Map<string, Transformation> = Map<
         string,
         Transformation
     >()
@@ -65,7 +65,7 @@ const Terminal: React.FC<React.HTMLAttributes<HTMLDivElement>> = () => {
             !output.namespace.expression.equals(namespace.expression)
         ) {
             const simplified: Node = simplification.transform(
-                output.namespace.expression as Node
+                output.namespace.expression
             );
             output = {
                 namespace: {

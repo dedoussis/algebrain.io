@@ -20,7 +20,7 @@
     "@types/react-dom": "16.8.5",
     "@types/react-responsive": "^8.0.2",
     "@types/react-splitter-layout": "^3.0.0",
-    "algebrain": "0.0.4-b",
+    "algebrain": "0.0.4-d",
     "antlr4ts": "^0.5.0-alpha.3",
     "bootstrap": "^4.3.1",
     "formik": "^1.5.8",
