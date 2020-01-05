@@ -13,13 +13,14 @@ import Algebrain, {
 import { Map, List } from 'immutable';
 import SplitterLayout from 'react-splitter-layout';
 import 'react-splitter-layout/lib/index.css';
-import { useMediaQuery } from 'react-responsive';
 import { Entry, Agent, generateAlgebrainEntry, LinkedList } from '../utils';
 import Input from '../Input/Input';
 import Printer from '../Printer/Printer';
-import SettingsPanel from '../SettingsPanel/SettingsPanel';
 
-const Terminal: React.FC<React.HTMLAttributes<HTMLDivElement>> = () => {
+const Terminal: React.FC<{
+    vertical: boolean;
+    customClassName?: string;
+}> = props => {
     const presetTransformations: Map<string, Transformation> = Map<
         string,
         Transformation
@@ -45,15 +46,9 @@ const Terminal: React.FC<React.HTMLAttributes<HTMLDivElement>> = () => {
         ])
     );
 
-    const [vertical, setVertical]: [boolean, Dispatch<any>] = useState(true);
-
     const [inputPaneSize, setInputPaneSize]: [number, Dispatch<any>] = useState(
         0
     );
-
-    const isDesktopOrLaptop = useMediaQuery({
-        query: '(min-device-width: 1224px)',
-    });
 
     const onNewEntry: (entry: Entry) => void = (entry: Entry) => {
         const executable: Executable = Algebrain.parse(
@@ -82,39 +77,31 @@ const Terminal: React.FC<React.HTMLAttributes<HTMLDivElement>> = () => {
     };
 
     return (
-        <div>
-            {isDesktopOrLaptop && (
-                <SettingsPanel
-                    vertical={vertical}
-                    verticalSetter={setVertical}
+        <SplitterLayout
+            customClassName={props.customClassName}
+            vertical={props.vertical}
+            percentage={true}
+            primaryMinSize={15}
+            secondaryMinSize={15}
+            secondaryInitialSize={35}
+            onSecondaryPaneSizeChange={(newSize: number) =>
+                setInputPaneSize(newSize)
+            }
+        >
+            <div className="terminal-output">
+                <Printer entries={entries} />
+            </div>
+            <div className="terminal-input">
+                <Input
+                    aria-label="command line"
+                    onNewEntry={onNewEntry}
+                    textAreaSize={props.vertical ? inputPaneSize : 100}
+                    userEntries={LinkedList.fromList(
+                        entries.filter(entry => entry.agent === Agent.Me)
+                    )}
                 />
-            )}
-            <SplitterLayout
-                customClassName="terminal"
-                vertical={vertical}
-                percentage={true}
-                primaryMinSize={15}
-                secondaryMinSize={15}
-                secondaryInitialSize={35}
-                onSecondaryPaneSizeChange={(newSize: number) =>
-                    setInputPaneSize(newSize)
-                }
-            >
-                <div className="terminal-output">
-                    <Printer entries={entries} />
-                </div>
-                <div className="terminal-input">
-                    <Input
-                        aria-label="command line"
-                        onNewEntry={onNewEntry}
-                        textAreaSize={vertical ? inputPaneSize : 100}
-                        userEntries={LinkedList.fromList(
-                            entries.filter(entry => entry.agent === Agent.Me)
-                        )}
-                    />
-                </div>
-            </SplitterLayout>
-        </div>
+            </div>
+        </SplitterLayout>
     );
 };
 
