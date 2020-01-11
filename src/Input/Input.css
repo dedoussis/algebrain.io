@@ -3,6 +3,7 @@ input,
 .form-control,
 .input-group,
 .input-group-text {
+  height: 100%;
   background-color: inherit !important;
   color: inherit !important;
 }

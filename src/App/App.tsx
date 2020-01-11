@@ -21,9 +21,9 @@ const App: React.FC = () => {
                 )}
             </header>
             <div className="main">
-                <Terminal customClassName="p-3" vertical={vertical} />
+                <Terminal customClassName="px-3 pb-3" vertical={vertical} />
             </div>
-            <footer className="invisible">Licensed under MIT</footer>
+            <footer></footer>
         </div>
     );
 };

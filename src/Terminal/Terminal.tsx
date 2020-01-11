@@ -46,10 +46,6 @@ const Terminal: React.FC<{
         ])
     );
 
-    const [inputPaneSize, setInputPaneSize]: [number, Dispatch<any>] = useState(
-        0
-    );
-
     const onNewEntry: (entry: Entry) => void = (entry: Entry) => {
         const executable: Executable = Algebrain.parse(
             entry.text.toString().trim()
@@ -84,9 +80,6 @@ const Terminal: React.FC<{
             primaryMinSize={15}
             secondaryMinSize={15}
             secondaryInitialSize={35}
-            onSecondaryPaneSizeChange={(newSize: number) =>
-                setInputPaneSize(newSize)
-            }
         >
             <div className="terminal-output">
                 <Printer entries={entries} />
@@ -95,7 +88,6 @@ const Terminal: React.FC<{
                 <Input
                     aria-label="command line"
                     onNewEntry={onNewEntry}
-                    textAreaSize={props.vertical ? inputPaneSize : 100}
                     userEntries={LinkedList.fromList(
                         entries.filter(entry => entry.agent === Agent.Me)
                     )}

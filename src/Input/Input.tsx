@@ -9,14 +9,12 @@ import { Entry, generateUserEntry, LinkedList, LinkedItem } from '../utils';
 type InputProps = {
     userEntries: LinkedList<Entry>;
     onNewEntry: (entry: Entry) => void;
-    textAreaSize: number;
     initialInput?: string;
 };
 
 const Input: React.FC<InputProps> = ({
     userEntries,
     onNewEntry,
-    textAreaSize,
     initialInput = '',
 }) => {
     let inputRef: React.RefObject<HTMLTextAreaElement> = useRef(null);
@@ -85,9 +83,6 @@ const Input: React.FC<InputProps> = ({
                                 inputRef = {
                                     current: ref as HTMLTextAreaElement,
                                 };
-                            }}
-                            style={{
-                                height: `${0.8 * textAreaSize}vh`,
                             }}
                             component="textarea"
                             name="input"
