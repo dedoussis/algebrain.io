@@ -55,8 +55,8 @@ const Terminal: React.FC<{
             output.namespace.expression &&
             !output.namespace.expression.equals(namespace.expression)
         ) {
-            const simplified: Node = simplification.transform(
-                output.namespace.expression
+            const simplified: Node = output.namespace.expression.transform(
+                simplification
             );
             output = {
                 namespace: {
