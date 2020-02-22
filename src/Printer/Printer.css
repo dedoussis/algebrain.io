@@ -1,13 +1,37 @@
-.agent {
-    font-size: 20px;
-    max-width: 2%;
+.stream {
+    max-width: 5ch !important;
+    font-weight: bold;
+    text-align: right;
+    color: rgb(10, 235, 235);
+
+}
+
+.out {
+    color: rgb(255, 82, 154);
 }
 
 .text, 
 .error-text {
-  white-space: pre-line;
+    white-space: pre-line;
 }
 
 .error-text {
-    color: rgb(245, 121, 121);
+    color: rgb(255, 190, 10);
+}
+
+.cell {
+  border: 1px solid transparent;
+}
+
+.cell:hover {
+  border: 1px solid #000000;
+}
+
+.cell-dark {
+    background-color: rgb(19, 29, 49);
+}
+
+.command {
+    background-color: inherit;
+    color: rgb(106, 255, 101);
 }

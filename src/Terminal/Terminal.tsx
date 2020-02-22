@@ -13,7 +13,7 @@ import Algebrain, {
 import { Map, List } from 'immutable';
 import SplitterLayout from 'react-splitter-layout';
 import 'react-splitter-layout/lib/index.css';
-import { Entry, Agent, generateAlgebrainEntry, LinkedList } from '../utils';
+import { Entry, Stream, generateOutputEntry, LinkedList } from '../utils';
 import Input from '../Input/Input';
 import Printer from '../Printer/Printer';
 
@@ -39,17 +39,13 @@ const Terminal: React.FC<{
         Dispatch<List<Entry>>
     ] = useState(
         List([
-            generateAlgebrainEntry('Welcome to Algebrain!'),
-            generateAlgebrainEntry(
-                'Try the help command for usage instructions'
-            ),
+            generateOutputEntry('Welcome to Algebrain!'),
+            generateOutputEntry('Try the help command for usage instructions'),
         ])
     );
 
     const onNewEntry: (entry: Entry) => void = (entry: Entry) => {
-        const executable: Executable = Algebrain.parse(
-            entry.text.toString().trim()
-        );
+        const executable: Executable = Algebrain.parse(entry.text);
         let output: Output = executable.execute(namespace);
         if (
             output.namespace.expression &&
@@ -67,16 +63,14 @@ const Terminal: React.FC<{
             };
         }
         setNamespace(output.namespace);
-        setEntries(
-            entries.concat([entry, generateAlgebrainEntry(output.stdOut)])
-        );
+        setEntries(entries.concat([entry, generateOutputEntry(output.stdOut)]));
     };
 
     return (
         <SplitterLayout
             customClassName={props.customClassName}
             vertical={props.vertical}
-            percentage={true}
+            percentage
             primaryMinSize={15}
             secondaryMinSize={15}
             secondaryInitialSize={35}
@@ -89,7 +83,7 @@ const Terminal: React.FC<{
                     aria-label="command line"
                     onNewEntry={onNewEntry}
                     userEntries={LinkedList.fromList(
-                        entries.filter(entry => entry.agent === Agent.Me)
+                        entries.filter(entry => entry.stream === Stream.Input)
                     )}
                 />
             </div>

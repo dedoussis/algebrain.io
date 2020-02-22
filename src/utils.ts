@@ -1,29 +1,29 @@
 import { List } from 'immutable';
 
-export enum Agent {
-    Algebrain = '🧠',
-    Me = '🙂',
+export enum Stream {
+    Input = 'IN',
+    Output = 'OUT',
 }
 
 export type Entry = {
     timestamp: string;
-    agent: Agent;
+    stream: Stream;
     text: string;
 };
 
-const generateEntry = (agent: Agent) => (text: string) => {
+const generateEntry = (stream: Stream) => (text: string) => {
     return {
         timestamp: new Date().toLocaleTimeString(),
-        agent: agent,
+        stream: stream,
         text: text,
     };
 };
 
-export const generateAlgebrainEntry: (text: string) => Entry = generateEntry(
-    Agent.Algebrain
+export const generateInputEntry: (text: string) => Entry = generateEntry(
+    Stream.Input
 );
-export const generateUserEntry: (text: string) => Entry = generateEntry(
-    Agent.Me
+export const generateOutputEntry: (text: string) => Entry = generateEntry(
+    Stream.Output
 );
 
 export type LinkedItem<T> = {

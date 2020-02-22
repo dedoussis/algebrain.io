@@ -4,7 +4,7 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import { Formik, Form, Field } from 'formik';
 
-import { Entry, generateUserEntry, LinkedList, LinkedItem } from '../utils';
+import { Entry, generateInputEntry, LinkedList, LinkedItem } from '../utils';
 
 type InputProps = {
     userEntries: LinkedList<Entry>;
@@ -28,14 +28,13 @@ const Input: React.FC<InputProps> = ({
         LinkedItem<Entry>,
         Dispatch<any>
     ] = useState(
-        userEntries.prepend(generateUserEntry(initialInput)).head as LinkedItem<
-            Entry
-        >
+        userEntries.prepend(generateInputEntry(initialInput))
+            .head as LinkedItem<Entry>
     );
     useEffect(
         () =>
             setCurrentEntry(
-                userEntries.prepend(generateUserEntry(initialInput))
+                userEntries.prepend(generateInputEntry(initialInput))
                     .head as LinkedItem<Entry>
             ),
         [userEntries, initialInput]
@@ -46,7 +45,7 @@ const Input: React.FC<InputProps> = ({
             initialValues={{ input: initialInput }}
             onSubmit={(values, { setSubmitting, resetForm }) => {
                 resetForm();
-                onNewEntry(generateUserEntry(values.input.trim()));
+                onNewEntry(generateInputEntry(values.input.trim()));
                 setSubmitting(false);
             }}
         >
