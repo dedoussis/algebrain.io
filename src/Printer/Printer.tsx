@@ -39,8 +39,9 @@ const Printer: React.FC<{ entries: List<Entry> }> = props => {
         <Container>
             {cells.map((cell, groupIdx) => (
                 <Row
-                    className={`rounded py-1 my-1 cell ${groupIdx % 2 !== 0 &&
-                        'cell-dark'}`}
+                    className={`cell ${
+                        groupIdx % 2 !== 0 ? 'cell-dark' : ''
+                    } rounded py-1 my-2`}
                     key={`cell-${groupIdx}`}
                 >
                     <Col>
@@ -53,21 +54,23 @@ const Printer: React.FC<{ entries: List<Entry> }> = props => {
                                     {entry.stream}
                                 </Col>
                                 <Col
-                                    className={`pl-4 pr-0 ${
+                                    className={`${
                                         errors.includes(
                                             entry.text as ExecuteError
                                         )
-                                            ? 'error-text'
-                                            : 'text'
-                                    }`}
+                                            ? 'error'
+                                            : ''
+                                    } pl-4 pr-0`}
                                 >
-                                    <Highlighter
-                                        highlightClassName="command"
-                                        searchWords={commands}
-                                        textToHighlight={entry.text}
-                                        caseSensitive
-                                        findChunks={customFindChunks}
-                                    />
+                                    <pre>
+                                        <Highlighter
+                                            highlightClassName="command"
+                                            searchWords={commands}
+                                            textToHighlight={entry.text}
+                                            caseSensitive
+                                            findChunks={customFindChunks}
+                                        />
+                                    </pre>
                                 </Col>
                             </Row>
                         ))}

@@ -73,9 +73,9 @@ const Terminal: React.FC<{
             percentage
             primaryMinSize={15}
             secondaryMinSize={15}
-            secondaryInitialSize={35}
+            secondaryInitialSize={25}
         >
-            <div className="terminal-output">
+            <div className={`terminal-output ${props.vertical ? '' : 'pr-3'}`}>
                 <Printer entries={entries} />
             </div>
             <div className="terminal-input">

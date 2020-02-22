@@ -10,12 +10,7 @@
     color: rgb(255, 82, 154);
 }
 
-.text, 
-.error-text {
-    white-space: pre-line;
-}
-
-.error-text {
+.error {
     color: rgb(255, 190, 10);
 }
 
@@ -33,5 +28,6 @@
 
 .command {
     background-color: inherit;
+    padding: 0;
     color: rgb(106, 255, 101);
 }
