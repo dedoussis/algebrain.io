@@ -21,7 +21,7 @@
     "@types/react-highlight-words": "^0.16.0",
     "@types/react-responsive": "^8.0.2",
     "@types/react-splitter-layout": "^3.0.0",
-    "algebrain": "0.0.6",
+    "algebrain": "0.0.9",
     "antlr4ts": "^0.5.0-alpha.3",
     "bootstrap": "^4.3.1",
     "formik": "^1.5.8",
@@ -32,7 +32,7 @@
     "react-dom": "^16.9.0",
     "react-highlight-words": "^0.16.0",
     "react-responsive": "^8.0.1",
-    "react-scripts": "^3.3.0",
+    "react-scripts": "^3.4.1",
     "react-splitter-layout": "^4.0.0",
     "typescript": "3.5.3"
   },

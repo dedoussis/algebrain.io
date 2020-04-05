@@ -3,12 +3,12 @@ import './Terminal.css';
 import Algebrain, {
     Namespace,
     Transformation,
-    Node,
     Output,
     Executable,
     differentiation,
     simplification,
     fibonacci,
+    integral,
 } from 'algebrain';
 import { Map, List } from 'immutable';
 import SplitterLayout from 'react-splitter-layout';
@@ -21,13 +21,12 @@ const Terminal: React.FC<{
     vertical: boolean;
     customClassName?: string;
 }> = props => {
-    const presetTransformations: Map<string, Transformation> = Map<
-        string,
-        Transformation
-    >()
-        .set(differentiation.name, differentiation)
-        .set(simplification.name, simplification)
-        .set(fibonacci.name, fibonacci);
+    const presetTransformations: Map<string, Transformation> = Map({
+        [differentiation.name]: differentiation,
+        [simplification.name]: simplification,
+        [fibonacci.name]: fibonacci,
+        [integral.name]: integral,
+    });
 
     const [namespace, setNamespace]: [Namespace, Dispatch<any>] = useState({
         transformations: presetTransformations,
@@ -51,8 +50,12 @@ const Terminal: React.FC<{
             output.namespace.expression &&
             !output.namespace.expression.equals(namespace.expression)
         ) {
-            const simplified: Node = output.namespace.expression.transform(
+            const namespaceSimplification = output.namespace.transformations.get(
+                simplification.name,
                 simplification
+            );
+            const simplified = output.namespace.expression.transform(
+                namespaceSimplification
             );
             output = {
                 namespace: {
